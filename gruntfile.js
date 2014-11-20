@@ -43,12 +43,20 @@ module.exports = function( grunt ) {
           ]
         }
       }
+    },
+    nugetpack: {
+        dist: {
+            src: 'jquery.maskedinput.nuspec',
+            dest: 'dist/'
+        }
     }
   });
 
   grunt.loadNpmTasks("grunt-contrib-jasmine");
   grunt.loadNpmTasks("grunt-contrib-uglify");
+  grunt.loadNpmTasks('grunt-nuget');
 
   grunt.registerTask('test', ['jasmine']);
+  grunt.registerTask('pack', ['default','nugetpack']);
   grunt.registerTask('default', ['test', 'uglify']);
 };

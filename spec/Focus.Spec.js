@@ -35,6 +35,34 @@ feature("Focusing A Masked Input",function(){
 		});
 	});
 
+	scenario("Mask starts with a literal that fits first placeholder",function(){
+		given("a mask beginning with a literal",function(){
+			input.mask("19").focus();
+		});
+		waits(20);
+		when("blurring",function(){
+			input.blur();
+		});
+		waits(20);
+		then("input value should be correct",function(){
+			expect(input).toHaveValue('');
+		});
+	});
+
+	scenario("Mask starts with a literal that fits first placeholder and autoclear set to false",function(){
+		given("a mask beginning with a literal",function(){
+			input.mask("?19",{autoclear: false}).focus();
+		});
+		waits(20);
+		when("blurring",function(){
+			input.blur();
+		});
+		waits(20);
+		then("input value should be correct",function(){
+			expect(input).toHaveValue('');
+		});
+	});
+
 	scenario("Masking a hidden input",function(){
 		var error;
 		$(window).on("error.test",function(err){error=err;})
@@ -113,6 +141,18 @@ feature("Leaving A Masked Input",function(){
 		});
 	});
 
+	scenario("Mask ending in literal",function(){
+		given("a mask ending in a literal",function(){
+			input.mask("99!");
+		});
+		when("typing two characters and blurring",function(){
+			input.mashKeys("12").blur();
+		});
+		then("value should remain",function(){
+			expect(input).toHaveValue("12!");
+		});
+	});
+
 	scenario("Empty placeholders remaining with autoclear set to false",function(){
 		given("a mask with two placeholders",function(){
 			input.mask("99", { autoclear: false });
@@ -145,76 +185,20 @@ feature("Leaving A Masked Input",function(){
 	});
 });
 
-feature("Optional marker",function(){
-	scenario("Placeholders not filled to marker",function(){
-		given("a mask with an optional marker",function(){
-			input.mask("99?99");
+	scenario("Shifts characters left on blur with autoclear false",function(){
+		given("a mask with 10 placeholders",function(){
+			input.mask("(999) 999-9999", { autoclear: false });
 		});
-		when("typing one character and leaving",function(){
-			input.mashKeys("1").blur();
+		when("focusing input",function(){
+			input.focus();
 		});
-		then("value should be empty",function(){
-			expect(input).toHaveValue("");
+		waits(20);
+		when("typing characters at the end of the mask and blurring",function(){
+			input.caret(12);
+			input.mashKeys("44").blur();
 		});
-	});
-
-	scenario("Placeholders not filled to marker and autoclear = false", function() {
-		given("a mask with an optional marker",function(){
-			input.mask("99?99", { autoclear: false });
-		});
-		when("typing one character and leaving",function(){
-			input.mashKeys("1").blur();
-		});
-		then("value should be empty",function(){
-			expect(input).toHaveValue("1___");
-		});
-	});
-
-	scenario("Placeholders filled to marker",function(){
-		given("a mask with an optional marker",function(){
-			input.mask("99?99");
-		});
-		when("typing two characters and leaving",function(){
-			input.mashKeys("12").blur();
-		});
-		then("value should remain",function(){
-			expect(input).toHaveValue("12");
-		});
-	});
-
-	scenario("Placeholders filled to marker and autoclear = false", function() {
-		given("a mask with an optional marker",function(){
-			input.mask("99?99", { autoclear: false });
-		});
-		when("typing two characters and leaving",function(){
-			input.mashKeys("12").blur();
-		});
-		then("value should remain",function(){
-			expect(input).toHaveValue("12");
-		});
-	});
-
-	scenario("Placeholders filled, one marker filled, and autoclear = false", function() {
-		given("a mask with an optional marker",function(){
-			input.mask("99?99", { autoclear: false });
-		});
-		when("typing three characters and leaving",function(){
-			input.mashKeys("123").blur();
-		});
-		then("value should remain",function(){
-			expect(input).toHaveValue("123");
-		});
-	});
-
-	scenario("Placeholders and markers filled, and autoclear = false", function() {
-		given("a mask with an optional marker",function(){
-			input.mask("99?99", { autoclear: false });
-		});
-		when("typing four characters and leaving",function(){
-			input.mashKeys("1234").blur();
-		});
-		then("value should remain",function(){
-			expect(input).toHaveValue("1234");
+		then("characters should shift left to beginning of mask",function(){
+			expect(input).toHaveValue("(44_) ___-____");
 		});
 	});
 });
