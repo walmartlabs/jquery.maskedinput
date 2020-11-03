@@ -1,3 +1,11 @@
+***
+# NOTICE:
+
+## This repository has been archived and is not supported.
+
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+***
+
 Masked Input Plugin for jQuery
 ==============================
 [![Build Status](https://travis-ci.org/digitalBush/jquery.maskedinput.png)](https://travis-ci.org/digitalBush/jquery.maskedinput)
